@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin{% endblock %}
+    
+{% block body %}
+
+<h1>List of Users:</h1>
+
+<ul>
+    {% for user in users %}
+
+    <li>
+        {{ user['email'] }}
+    </li>
+
+    {% endfor %}
+</ul>
+
+<button><a href="/profile">Back</a></button>
+
+{% endblock %}

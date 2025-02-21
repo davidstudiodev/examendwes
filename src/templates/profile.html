@@ -20,6 +20,11 @@
 </div>
 
 <div>
+    <p>Are you Admin? <a href="/admin">Enter</a></p>
+</div>
+
+<div>
+    <h3>List Objects:</h3>
     <ul>
         {% for obj in objects %}
 
@@ -43,6 +48,10 @@
 
         {% endfor %}
     </ul>
+</div>
+
+<div>
+    <button><a href="/logout">Logout</a></button>
 </div>
 
 {% endblock %}

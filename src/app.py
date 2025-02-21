@@ -76,7 +76,6 @@ def register():
     return render_template('register.html')
 
 @app.route('/profile', methods=['GET', 'POST'])
-@login_required
 def profile():
     
     if request.method == 'POST':
@@ -108,7 +107,6 @@ def delete(id):
         print('Error: ', e)        
 
 @app.route('/update/<string:id>', methods=['GET', 'POST'])
-@login_required
 def update(id):
     
     object_id = ObjectId(id)
@@ -141,6 +139,17 @@ def update(id):
 def not_found(e):
     return render_template('404.html')
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/admin', methods=['GET'])
+def admin():
+    
+    users = db.users.find()
+    
+    return render_template('admin.html', users= users)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5050)
