@@ -6,4 +6,43 @@
 
 <h1>Welcome</h1>
 
+<div>
+    <h3>Objects Manager</h3>
+
+    <form action="/profile" method="POST">
+
+        <input type="text" name="name" placeholder="Name">
+        <input type="number" name="price" placeholder="Price">
+        <input type="text" name="description" placeholder="Description">
+
+        <button type="submit">Add Object</button>
+    </form>
+</div>
+
+<div>
+    <ul>
+        {% for obj in objects %}
+
+        <li>
+            {{ obj['name'] }} <br>
+            {{ obj['price'] }} <br>
+            {{ obj['description'] }}
+
+            <div>
+                <form action="/update/{{ obj['_id'] }}" method="GET">
+                    <button type="submit">Update</button>
+                </form>
+
+                <form action="/delete/{{ obj['_id'] }}" method="POST">
+                    <button type="submit">Delete</button> 
+
+                </form>
+            </div>
+
+        </li>
+
+        {% endfor %}
+    </ul>
+</div>
+
 {% endblock %}

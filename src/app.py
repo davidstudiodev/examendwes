@@ -11,7 +11,7 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['examendwes']
 
 users = db['users']
-products = db['products']
+objects = db['objects']
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -49,6 +49,8 @@ def login():
         
         if validateUser and check_password_hash(validateUser['password'], password):
         
+            user = User(validateUser['_id'])
+            login_user(user)
             
             print('Successful login.')
             return redirect(url_for('profile'))
@@ -74,8 +76,71 @@ def register():
     return render_template('register.html')
 
 @app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
-    return render_template('profile.html')
+    
+    if request.method == 'POST':
+        
+        name = request.form['name']
+        price = request.form['price']
+        description = request.form['description']
+        
+        db.objects.insert_one({'name': name, 'price': price, 'description': description})
+        
+        print('Object add.')
+        return redirect(url_for('profile'))
+        
+    objects = db.objects.find()
+    return render_template('profile.html', objects=objects)
+
+@app.route('/delete/<string:id>', methods=['POST'])
+def delete(id):
+    
+    try:
+        object_id = ObjectId(id)    
+        result = db.objects.delete_one({'_id': object_id})
+        
+        if result.deleted_count > 0:
+            print('Product deleted.')
+            return redirect(url_for('profile'))
+        
+    except Exception as e:
+        print('Error: ', e)        
+
+@app.route('/update/<string:id>', methods=['GET', 'POST'])
+@login_required
+def update(id):
+    
+    object_id = ObjectId(id)
+    myobject = db.objects.find_one({'_id': object_id})
+    
+    try:
+        if request.method == 'POST':
+                    
+            name = request.form['name']
+            price = request.form['price']
+            description = request.form['description']
+                    
+            update_data = {
+                'name': name,
+                'price': price,
+                'description': description
+            }
+                    
+            result = db.objects.update_one({'_id': object_id}, {'$set': update_data})
+            if result.modified_count > 0:
+                print('Product update.')
+                return redirect(url_for('profile'))
+    
+    except Exception as e:
+        print('Error: ', e)
+          
+    return render_template('update.html', myobject=myobject)
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5050)

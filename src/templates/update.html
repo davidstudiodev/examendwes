@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Update{% endblock %}
+    
+{% block body %}
+
+<div>
+    <h3>Update Object</h3>
+
+    <form action="/update/{{ myobject['_id'] }}" method="POST">
+
+        <input type="text" name="name" placeholder="Name" value="{{ myobject['name'] }}">
+        <input type="number" name="price" placeholder="Price" value="{{ myobject['price'] }}">
+        <input type="text" name="description" placeholder="Description" value="{{ myobject['description'] }}">
+
+        <button type="submit">Add Object</button>
+    </form>
+</div>
+
+{% endblock %}
